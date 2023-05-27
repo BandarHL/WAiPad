@@ -4,8 +4,13 @@
 
 
 int (*orig_WAUIDevicesIsDeviceSupported)(void);
-int new_WAUIDevicesIsDeviceSupported(void){
+int new_WAUIDevicesIsDeviceSupported(void) {
         return 1;
+}
+
+int (*orig_WAUIDevicesIsIPad)(void);
+int new_WAUIDevicesIsIPad(void) {
+    return 0;
 }
 
 // iPad
@@ -55,12 +60,13 @@ int new_WAUIDevicesIsDeviceSupported(void){
 
 
 %ctor {
-    struct rebinding binds[1];
+    struct rebinding binds[2];
 
     struct rebinding bind1 = {"WAUIDevicesIsDeviceSupported", (void *)new_WAUIDevicesIsDeviceSupported, (void **)&orig_WAUIDevicesIsDeviceSupported};
+    struct rebinding bind2 = {"_WAUIDevicesIsIPad", (void *)new_WAUIDevicesIsIPad, (void **)&orig_WAUIDevicesIsIPad};
     binds[0] = bind1;
+    binds[1] = bind2;
 
 
-    rebind_symbols(binds, 1);
-
+    rebind_symbols(binds, 2);
 }
